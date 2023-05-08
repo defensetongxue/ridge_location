@@ -53,7 +53,7 @@ def parse_json_file(file_dict):
 
     return annotation
 
-def split(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
+def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
     random.shuffle(annotations)
 
     train_split_size = int(train_proportion * len(annotations))
@@ -75,7 +75,7 @@ def split(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
     print(f"Train samples: {len(train_annotations)}")
     print(f"Validation samples: {len(val_annotations)}")
     print(f"Test samples: {len(test_annotations)}")
-    
+
 if __name__=='__main__':
     import argparse
     parser = argparse.ArgumentParser()
