@@ -74,3 +74,37 @@ def get_optimizer(cfg, model):
         )
 
     return optimizer
+
+import numpy as np
+
+def generate_negative_points(coordinates, width):
+    # Sort the coordinates by y
+    sorted_coordinates = sorted(coordinates, key=lambda x: x[1])
+
+    negative_points = []
+
+    # Iterate through each pair of points in the sorted list
+    for i in range(len(sorted_coordinates) - 1):
+        point1 = np.array(sorted_coordinates[i])
+        point2 = np.array(sorted_coordinates[i + 1])
+
+        # Compute the vector between the two points and normalize it
+        direction = point2 - point1
+        direction = direction / np.linalg.norm(direction)
+
+        # Compute the perpendicular vector and normalize it
+        perpendicular = np.array([-direction[1], direction[0]])
+
+        # Calculate the midpoint between the two points
+        midpoint = (point1 + point2) / 2
+
+        # Calculate the two new points on the perpendicular line, with a distance of 'width' between them
+        negative_point1 = midpoint + (width / 2) * perpendicular
+        negative_point2 = midpoint - (width / 2) * perpendicular
+
+        # Append the new points to the list of negative points
+        negative_points.append(tuple(negative_point1))
+        negative_points.append(tuple(negative_point2))
+
+    return negative_points
+
