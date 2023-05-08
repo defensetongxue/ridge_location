@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 def parse_json(input_data):
     annotations = input_data.get("annotations", [])
@@ -40,7 +41,7 @@ def parse_json(input_data):
 
     return new_data
 
-def parse_json_file(file_dict,save_path):
+def parse_json_file(file_dict):
     
     annotation=[]
     file_list=os.listdir(file_dict)
@@ -50,9 +51,31 @@ def parse_json_file(file_dict,save_path):
         for json_obj in data:
             annotation.append(parse_json(json_obj))
 
-    with open(save_path, 'w') as f:
-        json.dump(annotation, f, indent=2)
+    return annotation
 
+def split(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
+    random.shuffle(annotations)
+
+    train_split_size = int(train_proportion * len(annotations))
+    val_split_size = int(val_proportion * len(annotations))
+    train_annotations = annotations[:train_split_size]
+    val_annotations = annotations[train_split_size:train_split_size + val_split_size]
+    test_annotations = annotations[train_split_size + val_split_size:]
+
+    with open(os.path.join(data_path, 'annotations', 'train.json'), 'w') as f:
+        json.dump(train_annotations, f, indent=2)
+
+    with open(os.path.join(data_path, 'annotations', 'val.json'), 'w') as f:
+        json.dump(val_annotations, f, indent=2)
+
+    with open(os.path.join(data_path, 'annotations', 'test.json'), 'w') as f:
+        json.dump(test_annotations, f, indent=2)
+
+    print(f"Total samples: {len(annotations)}")
+    print(f"Train samples: {len(train_annotations)}")
+    print(f"Validation samples: {len(val_annotations)}")
+    print(f"Test samples: {len(test_annotations)}")
+    
 if __name__=='__main__':
     import argparse
     parser = argparse.ArgumentParser()
@@ -63,4 +86,5 @@ if __name__=='__main__':
                         help='Path to the source folder containing original datasets.')
     args = parser.parse_args()
 
-    parse_json_file(args.json_file_dict,save_path=args.tar_json_path)
+    annotations=parse_json_file(args.json_file_dict)
+    split_data(annotations)
