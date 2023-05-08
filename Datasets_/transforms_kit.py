@@ -52,33 +52,38 @@ class Fix_RandomRotation:
             angle = 0
         return angle
 
-    def __call__(self, img, keypoint):
+    def __call__(self, img, keypoints):
         angle = self.get_params()
         img = F.rotate(img, angle, F.InterpolationMode.NEAREST, expand=self.expand, center=self.center)
-        x, y = keypoint
         img_w, img_h = img.size
-        if angle == -90:
-            keypoint = torch.tensor([y,  x])
-        elif angle == 90:
-            keypoint = torch.tensor([y, img_h- x])
-        elif angle == 180:
-            keypoint = torch.tensor([img_w - x, img_h - y])
-        # No change for angle == 0
-        return img, keypoint
+        rotated_keypoints = []
+
+        for keypoint in keypoints:
+            x, y = keypoint
+            if angle == -90:
+                rotated_keypoints.append(torch.tensor([y, x]))
+            elif angle == 90:
+                rotated_keypoints.append(torch.tensor([y, img_h - x]))
+            elif angle == 180:
+                rotated_keypoints.append(torch.tensor([img_w - x, img_h - y]))
+            else:
+                rotated_keypoints.append(torch.tensor([x, y]))
+        
+        return img, torch.stack(rotated_keypoints)
     
 class RandomHorizontalFlip:
-    def __call__(self, img, keypoint):
+    def __call__(self, img, keypoints):
         if torch.rand(1) < 0.5:
             img = F.hflip(img)
-            keypoint = torch.tensor([img.size[0] - keypoint[0], keypoint[1]])
-        return img, keypoint
+            keypoints = torch.tensor([[img.size[0] - k[0], k[1]] for k in keypoints])
+        return img, keypoints
 
 class RandomVerticalFlip:
-    def __call__(self, img, keypoint):
+    def __call__(self, img, keypoints):
         if torch.rand(1) < 0.5:
             img = F.vflip(img)
-            keypoint = torch.tensor([keypoint[0], img.size[1] - keypoint[1]])
-        return img, keypoint
+            keypoints = torch.tensor([[k[0], img.size[1] - k[1]] for k in keypoints])
+        return img, keypoints
     
 class ToTensor:
     def __init__(self) -> None:
