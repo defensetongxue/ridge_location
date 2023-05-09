@@ -124,7 +124,7 @@ def get_config():
                         help='Datset used. DRIONS-DB,GY,HRF,ODVOC,STARE | all')
     parser.add_argument('--save_name', type=str, default="./checkpoints/best.pth",
                         help='Name of the file to save the best model during training.')
-    parser.add_argument('--result_path', type=str, default="experiments/visual",
+    parser.add_argument('--result_path', type=str, default="experiments",
                         help='Path to the visualize result or the pytorch model will be saved.')
     parser.add_argument('--from_checkpoint', type=str, default="",
                         help='load the exit checkpoint.')

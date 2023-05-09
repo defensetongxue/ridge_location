@@ -14,13 +14,16 @@ def visualize_and_save_landmarks(image_path, preds, maxvals, save_path,text=Fals
     if isinstance(maxvals, torch.Tensor):
         maxvals = maxvals.squeeze().numpy()
     # Draw landmarks on the image
+    cnt=1
     for pred, maxval in zip(preds, maxvals):
         x, y = pred
         cv2.circle(img, (int(x), int(y)), 8, (255, 0, 0), -1)
         if text:
             cv2.putText(img, f"{maxval:.2f}", (int(x), int(y)), 
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
+        cv2.putText(img, f"{cnt}", (int(x), int(y)), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        cnt+=1
     # Save the image with landmarks
     cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 

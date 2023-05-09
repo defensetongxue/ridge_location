@@ -83,4 +83,4 @@ if __name__=='__main__':
     
     # cleansing
     annotations=parse_json_file(args.json_file_dict)
-    split_data(args.path_tar,annotations)
+    split_data(args.path_tar,annotations,0.8,0.14)
