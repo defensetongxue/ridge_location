@@ -5,7 +5,7 @@ import cv2
 def visualize_and_save_landmarks(image_path, preds, maxvals, save_path,text=False):
     print(image_path)
     img = cv2.imread(image_path)
-    img = cv2.resize(img, (416, 416))
+    img = cv2.resize(img, (800,800))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # Ensure preds and maxvals are NumPy arrays
