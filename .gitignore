@@ -4,3 +4,4 @@ __pycache__
 experiments
 checkpoints
 *.ipynb
+json_src
