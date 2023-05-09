@@ -21,10 +21,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)
 model.load_state_dict(
     torch.load(args.save_name))
+print(f"load the checkpoint in {args.save_name}")
 model.eval()
 
 # Create the dataset and data loader
-data_path=os.path.join(args.path_tar, "GY")
+data_path=os.path.join(args.path_tar)
 test_dataset = CustomDatset(data_path,split='test')
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 # Create the visualizations directory if it doesn't exist
@@ -38,10 +39,10 @@ with torch.no_grad():
 
         output = model(inputs)
         score_map = output.data.cpu()
-        preds = decode_preds(score_map)
+        preds,maxval = decode_preds(score_map,visual_num=3)
         visualize_and_save_landmarks(
             image_path=meta[0],
-            preds=preds,
+            preds=preds,maxvals= maxval,
             save_path=os.path.join(visual_dir,os.path.basename(meta[0])))
     print("Finished testing")
 

@@ -113,9 +113,7 @@ if __name__ == '__main__':
 def get_config():
     parser = argparse.ArgumentParser()
     # cleansing
-    parser.add_argument('--path_src', type=str, default="../autodl-tmp/datasets_original",
-                        help='Path to the source folder containing original datasets.')
-    parser.add_argument('--path_tar', type=str, default='../autodl-tmp/datasets_keypoint',
+    parser.add_argument('--path_tar', type=str, default='../autodl-tmp/dataset_ROP',
                         help='Path to the target folder to store the processed datasets.')
     # Model
     parser.add_argument('--model', type=str, default='hrnet',
@@ -130,7 +128,9 @@ def get_config():
                         help='Path to the visualize result or the pytorch model will be saved.')
     parser.add_argument('--from_checkpoint', type=str, default="",
                         help='load the exit checkpoint.')
-
+    parser.add_argument('--json_file_dict', type=str, default="./json_src",
+                        help='Path to the source folder containing original datasets.')
+    
     # config file 
     parser.add_argument('--cfg', help='experiment configuration filename',
                         default="./YAML/default.yaml", type=str)

@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 from config import get_config
-from utils_ import get_instance, train_epoch, val_epoch,get_optimizer,get_dataset
+from utils_ import get_instance, train_epoch, val_epoch,get_optimizer
 from Datasets_ import CustomDatset
 import models
 import os
@@ -23,6 +23,7 @@ if os.path.isfile(args.from_checkpoint):
     print(f"loadding the exit checkpoints {args.from_checkpoint}")
     model.load_state_dict(
     torch.load(args.from_checkpoint))
+
 # Creatr optimizer
 optimizer = get_optimizer(args.configs, model)
 last_epoch = args.configs.TRAIN.BEGIN_EPOCH
@@ -38,7 +39,8 @@ else:
     )
 
 # Load the datasets
-train_dataset,val_dataset=get_dataset(args.path_tar,args.dataset)
+train_dataset=CustomDatset(args.path_tar,'train')
+val_dataset=CustomDatset(args.path_tar,'val')
 # Create the data loaders
 train_loader = DataLoader(train_dataset, batch_size=args.configs.TRAIN.BATCH_SIZE_PER_GPU,
                           shuffle=True, num_workers=4)

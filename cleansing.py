@@ -44,7 +44,8 @@ def parse_json(input_data):
 def parse_json_file(file_dict):
     
     annotation=[]
-    file_list=os.listdir(file_dict)
+    file_list=sorted(os.listdir(file_dict))
+    print(f"read the origianl json file from {file_list}")
     for file in file_list:
         with open(os.path.join(file_dict,file), 'r') as f:
             data = json.load(f)
@@ -54,7 +55,7 @@ def parse_json_file(file_dict):
     return annotation
 
 def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
-    random.shuffle(annotations)
+    # random.shuffle(annotations)
 
     train_split_size = int(train_proportion * len(annotations))
     val_split_size = int(val_proportion * len(annotations))
@@ -77,14 +78,9 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     print(f"Test samples: {len(test_annotations)}")
 
 if __name__=='__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
+    from config import get_config
+    args=get_config()
+    
     # cleansing
-    parser.add_argument('--json_file_dict', type=str, default="./json_src",
-                        help='Path to the source folder containing original datasets.')
-    parser.add_argument('--tar_json_path', type=str, default="./annotation.json",
-                        help='Path to the source folder containing original datasets.')
-    args = parser.parse_args()
-
     annotations=parse_json_file(args.json_file_dict)
-    split_data(annotations)
+    split_data(args.path_tar,annotations)

@@ -15,13 +15,13 @@ class Resize:
     def __init__(self, size):
         self.size = size
 
-    def __call__(self, img, keypoint):
+    def __call__(self, img, keypoints):
         original_size = img.size
         img = F.resize(img, self.size)
         scale_x = self.size[0] / original_size[0]
         scale_y = self.size[1] / original_size[1]
-        keypoint = torch.tensor([keypoint[0] * scale_x, keypoint[1] * scale_y])
-        return img, keypoint
+        keypoints = torch.tensor([[k[0] * scale_x, k[1] * scale_y] for k in keypoints])
+        return img, keypoints
 
 class ContrastEnhancement:
     def __init__(self, factor=1.5):

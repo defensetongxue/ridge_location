@@ -1,6 +1,7 @@
 import torch
 import inspect
 from torch import optim
+import numpy as np
 
 def train_epoch(model, optimizer, train_loader, loss_function, device):
     model.train()
@@ -75,7 +76,6 @@ def get_optimizer(cfg, model):
 
     return optimizer
 
-import numpy as np
 
 def generate_negative_points(coordinates, width):
     # Sort the coordinates by y

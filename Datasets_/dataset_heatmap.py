@@ -13,7 +13,7 @@ class KeypointDetectionDatasetHeatmap(Dataset):
 
         if split=='train':
             self.transform=KeypointDetectionTransformHeatmap(mode='train')
-        elif split=='valid' or split=='test':
+        elif split=='val' or split=='test':
             self.transform=KeypointDetectionTransformHeatmap(mode='val')
         else:
             raise ValueError(
@@ -55,11 +55,12 @@ class KeypointDetectionDatasetHeatmap(Dataset):
         img = Image.open(img_path).convert('RGB')
 
         ridge_coordinates = annotation['ridge_coordinate']
-        heatmap_width = int(img.width * self.heatmap_rate)
-        heatmap_height = int(img.height * self.heatmap_rate)
-        heatmap = np.zeros((heatmap_width, heatmap_height), dtype=np.float32)
+        
         if self.transform:
-            img,ridge_coordinat=self.transform(img,ridge_coordinat)
+            img,ridge_coordinates=self.transform(img,ridge_coordinates)
+        heatmap_width = int(img.shape[1] * self.heatmap_rate)
+        heatmap_height = int(img.shape[2] * self.heatmap_rate)
+        heatmap = np.zeros((heatmap_width, heatmap_height), dtype=np.float32)
         for ridge_coordinate in ridge_coordinates:
             ridge_coordinate_scaled = (ridge_coordinate[0] * self.heatmap_rate, ridge_coordinate[1] * self.heatmap_rate)
             heatmap = self.generate_target(heatmap, ridge_coordinate_scaled, sigma=self.sigma, img_path=img_path)
