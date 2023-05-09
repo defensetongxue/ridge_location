@@ -73,7 +73,7 @@ class KeypointDetectionDatasetHeatmap(Dataset):
 class KeypointDetectionTransformHeatmap:
     def __init__(self, mean=[0.4623, 0.3856, 0.2822],
                  std=[0.2527, 0.1889, 0.1334],
-                 size=(416, 416),
+                 size=(800,800),
                  mode='train'):
         self.size = size
         self.mode = mode
