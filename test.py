@@ -42,6 +42,7 @@ with torch.no_grad():
         preds,maxval = decode_preds(score_map,visual_num=3)
         visualize_and_save_landmarks(
             image_path=meta[0],
+            image_resize=args.configs.IMAGE_RESIZE,
             preds=preds,maxvals= maxval,
             save_path=os.path.join(visual_dir,os.path.basename(meta[0])))
     print("Finished testing")

@@ -11,6 +11,8 @@ _C.WORKERS = 16
 _C.PRINT_FREQ = 20
 _C.PIN_MEMORY = True
 
+_C.IMAGE_RESIZE = [800, 800]  # width * height
+
 # Cudnn related params
 _C.CUDNN = CN()
 _C.CUDNN.BENCHMARK = True
@@ -24,8 +26,6 @@ _C.MODEL.INIT_WEIGHTS = True
 _C.MODEL.PRETRAINED = ''
 _C.MODEL.NUM_JOINTS = 17
 _C.MODEL.TARGET_TYPE = 'Gaussian'
-_C.MODEL.IMAGE_SIZE = [416, 416]  # width * height
-_C.MODEL.HEATMAP_SIZE = [104, 104]  # width * height
 _C.MODEL.SIGMA = 1.5
 _C.MODEL.EXTRA = CN()
 

@@ -1,19 +1,15 @@
 GPUS: (0,)
 WORKERS: 4
 PRINT_FREQ: 50
-
+IMAGE_RESIZE:
+  - 800
+  - 800
 MODEL:
   NAME: 'hrnet'
   NUM_JOINTS: 1
   INIT_WEIGHTS: true
   PRETRAINED: './models/pretrained/hrnetv2_w18_imagenet_pretrained.pth'
   SIGMA: 1.5
-  IMAGE_SIZE:
-    - 256
-    - 256
-  HEATMAP_SIZE:
-    - 64
-    - 64
   EXTRA:
     FINAL_CONV_KERNEL: 1
     STAGE2:

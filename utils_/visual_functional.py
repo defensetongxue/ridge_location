@@ -2,12 +2,12 @@ import torch
 import math
 import cv2
 
-def visualize_and_save_landmarks(image_path, preds, maxvals, save_path,text=False):
+def visualize_and_save_landmarks(image_path, image_resize,
+                                 preds, maxvals, save_path,text=False):
     print(image_path)
     img = cv2.imread(image_path)
-    img = cv2.resize(img, (800,800))
+    w_r,h_r=img.shape[1]/image_resize[0],img.shape[0]/image_resize[1]
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
     # Ensure preds and maxvals are NumPy arrays
     if isinstance(preds, torch.Tensor):
         preds = preds.squeeze(0).numpy()
@@ -17,6 +17,7 @@ def visualize_and_save_landmarks(image_path, preds, maxvals, save_path,text=Fals
     cnt=1
     for pred, maxval in zip(preds, maxvals):
         x, y = pred
+        x,y=x*w_r,y*h_r
         cv2.circle(img, (int(x), int(y)), 8, (255, 0, 0), -1)
         if text:
             cv2.putText(img, f"{maxval:.2f}", (int(x), int(y)), 

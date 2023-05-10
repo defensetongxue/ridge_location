@@ -39,8 +39,8 @@ else:
     )
 
 # Load the datasets
-train_dataset=CustomDatset(args.path_tar,'train')
-val_dataset=CustomDatset(args.path_tar,'val')
+train_dataset=CustomDatset(args.path_tar,'train',resize=args.configs.IMAGE_RESIZE)
+val_dataset=CustomDatset(args.path_tar,'val',resize=args.configs.IMAGE_RESIZE)
 # Create the data loaders
 train_loader = DataLoader(train_dataset, batch_size=args.configs.TRAIN.BATCH_SIZE_PER_GPU,
                           shuffle=True, num_workers=4)

@@ -5,16 +5,16 @@ from PIL import Image
 import json
 from .transforms_kit import *
 class KeypointDetectionDatasetHeatmap(Dataset):
-    def __init__(self, data_path, split='train', heatmap_rate=0.25, sigma=1.5):
+    def __init__(self, data_path, split='train', heatmap_rate=0.25, sigma=1.5,resize=[800,800]):
         self.data_path = data_path
         self.heatmap_rate = heatmap_rate
         self.sigma = sigma
         self.annotations = json.load(open(os.path.join(data_path, 'annotations', f"{split}.json")))
 
         if split=='train':
-            self.transform=KeypointDetectionTransformHeatmap(mode='train')
+            self.transform=KeypointDetectionTransformHeatmap(mode='train',size=resize)
         elif split=='val' or split=='test':
-            self.transform=KeypointDetectionTransformHeatmap(mode='val')
+            self.transform=KeypointDetectionTransformHeatmap(mode='val',size=resize)
         else:
             raise ValueError(
                 f"Invalid split: {split}, split should be one of train|valid|test")
