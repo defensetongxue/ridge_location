@@ -55,7 +55,9 @@ def parse_json_file(file_dict):
     return annotation
 
 def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
-    # random.shuffle(annotations)
+    # Important: do not shuffle, as there may be some images very similar be split into different set
+    os.makedirs(os.path.join(data_path, 'ridge'),exist_ok=True)
+    os.system(f"rm -rf {os.path.join(data_path, 'ridge')}/*")
 
     train_split_size = int(train_proportion * len(annotations))
     val_split_size = int(val_proportion * len(annotations))
@@ -63,13 +65,13 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     val_annotations = annotations[train_split_size:train_split_size + val_split_size]
     test_annotations = annotations[train_split_size + val_split_size:]
 
-    with open(os.path.join(data_path, 'annotations', 'train.json'), 'w') as f:
+    with open(os.path.join(data_path, 'ridge', 'train.json'), 'w') as f:
         json.dump(train_annotations, f, indent=2)
 
-    with open(os.path.join(data_path, 'annotations', 'val.json'), 'w') as f:
+    with open(os.path.join(data_path, 'ridge', 'val.json'), 'w') as f:
         json.dump(val_annotations, f, indent=2)
 
-    with open(os.path.join(data_path, 'annotations', 'test.json'), 'w') as f:
+    with open(os.path.join(data_path, 'ridge', 'test.json'), 'w') as f:
         json.dump(test_annotations, f, indent=2)
 
     print(f"Total samples: {len(annotations)}")
