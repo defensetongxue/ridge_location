@@ -77,5 +77,10 @@ def get_optimizer(cfg, model):
     return optimizer
 
 
-
+def ridge2json(image_path,preds,maxvals):
+    return {
+        "image_path":image_path,
+        "ridge_coordinate":preds,
+        "score":maxvals
+    }
 

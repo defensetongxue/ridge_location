@@ -14,10 +14,12 @@ def visualize_and_save_landmarks(image_path, image_resize,
     if isinstance(maxvals, torch.Tensor):
         maxvals = maxvals.squeeze().numpy()
     # Draw landmarks on the image
+    preds[:,0]*=w_r
+    preds[:,1]*=h_r
     cnt=1
     for pred, maxval in zip(preds, maxvals):
         x, y = pred
-        x,y=x*w_r,y*h_r
+        # x,y=x*w_r,y*h_r
         cv2.circle(img, (int(x), int(y)), 8, (255, 0, 0), -1)
         if text:
             cv2.putText(img, f"{maxval:.2f}", (int(x), int(y)), 
@@ -27,6 +29,7 @@ def visualize_and_save_landmarks(image_path, image_resize,
         cnt+=1
     # Save the image with landmarks
     cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+    return preds,maxvals
 
 def get_preds(scores, number, r=20):
     """
