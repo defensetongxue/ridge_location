@@ -2,7 +2,7 @@ import json
 import os
 import random
 
-def parse_json(input_data):
+def parse_json(input_data,label_class=0):
     annotations = input_data.get("annotations", [])
     if annotations:
         result = annotations[0].get("result", [])
@@ -16,7 +16,8 @@ def parse_json(input_data):
         "plus_number": 0,
         "plus_coordinate": [],
         "pre_plus_number": 0,
-        "pre_plus_coordinate": []
+        "pre_plus_coordinate": [],
+        "class": label_class
     }
 
     for item in result:
@@ -49,8 +50,9 @@ def parse_json_file(file_dict):
     for file in file_list:
         with open(os.path.join(file_dict,file), 'r') as f:
             data = json.load(f)
+        
         for json_obj in data:
-            annotation.append(parse_json(json_obj))
+            annotation.append(parse_json(json_obj,label_class=int(file[0])))
 
     return annotation
 
