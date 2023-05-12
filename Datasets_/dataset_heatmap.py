@@ -9,7 +9,7 @@ class KeypointDetectionDatasetHeatmap(Dataset):
         self.data_path = data_path
         self.heatmap_rate = heatmap_rate
         self.sigma = sigma
-        self.annotations = json.load(open(os.path.join(data_path, 'annotations', f"{split}.json")))
+        self.annotations = json.load(open(os.path.join(data_path, 'ridge', f"{split}.json")))
 
         if split=='train':
             self.transform=KeypointDetectionTransformHeatmap(mode='train',size=resize)
