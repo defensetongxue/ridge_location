@@ -9,3 +9,5 @@ json_src
 SamModule/checkpoint
 tmp.*
 .ipynb_checkpoints
+*.out
+ring.py
