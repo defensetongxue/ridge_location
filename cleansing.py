@@ -48,11 +48,16 @@ def parse_json_file(file_dict):
     file_list=sorted(os.listdir(file_dict))
     print(f"read the origianl json file from {file_list}")
     for file in file_list:
+        if not file.split('.')[-1]=='json':
+            print(f"unexpected file {file} in json_src")
+            continue
         with open(os.path.join(file_dict,file), 'r') as f:
             data = json.load(f)
         
         for json_obj in data:
-            annotation.append(parse_json(json_obj,label_class=int(file[0])))
+            new_data=parse_json(json_obj,label_class=int(file[0]))
+            if new_data["ridge_number"]>0:        
+                annotation.append(new_data)
 
     return annotation
 
@@ -61,12 +66,31 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     os.makedirs(os.path.join(data_path, 'ridge'),exist_ok=True)
     os.system(f"rm -rf {os.path.join(data_path, 'ridge')}/*")
 
-    train_split_size = int(train_proportion * len(annotations))
-    val_split_size = int(val_proportion * len(annotations))
-    train_annotations = annotations[:train_split_size]
-    val_annotations = annotations[train_split_size:train_split_size + val_split_size]
-    test_annotations = annotations[train_split_size + val_split_size:]
-
+    with open(os.path.join(data_path, 'annotations', "train.json"), 'r') as f:
+        train_list=json.load(f)
+        train_list=[i['image_name'] for i in train_list]
+    with open(os.path.join(data_path, 'annotations', "val.json"), 'r') as f:
+        val_list=json.load(f)
+        val_list=[i['image_name'] for i in val_list]
+    with open(os.path.join(data_path, 'annotations', "test.json"), 'r') as f:
+        test_list=json.load(f)
+        test_list=[i['image_name'] for i in test_list]
+    train_annotations = []
+    val_annotations = []
+    test_annotations =[]
+    train_condition={'1':0,"2":0}
+    val_condition={'1':0,"2":0}
+    test_condition={'1':0,"2":0}
+    for data in annotations:
+        if data['image_name'] in train_list:
+            train_annotations.append(data)
+            train_condition[str(data['class'])]+=1
+        if data['image_name'] in val_list:
+            val_annotations.append(data)
+            val_condition[str(data['class'])]+=1
+        if data['image_name'] in test_list:
+            test_annotations.append(data)
+            test_condition[str(data['class'])]+=1
     with open(os.path.join(data_path, 'ridge', 'train.json'), 'w') as f:
         json.dump(train_annotations, f, indent=2)
 
@@ -76,15 +100,15 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     with open(os.path.join(data_path, 'ridge', 'test.json'), 'w') as f:
         json.dump(test_annotations, f, indent=2)
 
-    print(f"Total samples: {len(annotations)}")
-    print(f"Train samples: {len(train_annotations)}")
-    print(f"Validation samples: {len(val_annotations)}")
-    print(f"Test samples: {len(test_annotations)}")
-
+    print(f"Total samples: {len(annotations)}" )
+    print(f"Train samples: {len(train_annotations)} {train_condition}")
+    print(f"Validation samples: {len(val_annotations)} {val_condition}")
+    print(f"Test samples: {len(test_annotations)} {test_condition}")
+    print()
 if __name__=='__main__':
     from config import get_config
     args=get_config()
     
     # cleansing
     annotations=parse_json_file(args.json_file_dict)
-    split_data(args.path_tar,annotations,0.8,0.14)
+    split_data(args.path_tar,annotations,0.8,0.13)
