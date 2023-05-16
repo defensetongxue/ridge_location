@@ -1,5 +1,5 @@
 GPUS: (0,)
-WORKERS: 12
+WORKERS: 15
 PRINT_FREQ: 50
 IMAGE_RESIZE:
   - 800
@@ -60,7 +60,7 @@ TRAIN:
   OPTIMIZER: 'adam'
   LR: 0.0001
   WD: 0.0
-  LR_STEP: [20, 40]
+  LR_STEP: [25, 40]
   MOMENTUM: 0.0
   NESTEROV: false
 TEST:

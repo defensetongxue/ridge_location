@@ -23,7 +23,7 @@ if os.path.isfile(args.from_checkpoint):
     print(f"loadding the exit checkpoints {args.from_checkpoint}")
     model.load_state_dict(
     torch.load(args.from_checkpoint))
-
+model.train()
 # Creatr optimizer
 optimizer = get_optimizer(args.configs, model)
 last_epoch = args.configs.TRAIN.BEGIN_EPOCH
@@ -58,12 +58,14 @@ best_val_loss = float('inf')
 total_epoches=args.configs.TRAIN.END_EPOCH
 # Training and validation loop
 for epoch in range(last_epoch,total_epoches):
+
     train_loss = train_epoch(model, optimizer, train_loader, criterion, device)
-    print(f"Epoch {epoch + 1}/{total_epoches}, Train Loss: {train_loss}")
-
+    lr_scheduler.step()
+    
     val_loss = val_epoch(model, val_loader, criterion, device)
-    print(f"Epoch {epoch + 1}/{total_epoches}, Val Loss: {val_loss}")
-
+    print(f"Epoch {epoch + 1}/{total_epoches}," 
+          f"Train Loss: {train_loss:.6f}, Val Loss: {val_loss:.6f}," 
+            f" Lr: {optimizer.state_dict()['param_groups'][0]['lr']:.6f}" )
     # Early stopping
     if val_loss < best_val_loss:
         best_val_loss = val_loss

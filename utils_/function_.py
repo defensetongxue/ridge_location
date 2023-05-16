@@ -73,7 +73,8 @@ def get_optimizer(cfg, model):
             alpha=cfg.TRAIN.RMSPROP_ALPHA,
             centered=cfg.TRAIN.RMSPROP_CENTERED
         )
-
+    else:
+        raise
     return optimizer
 
 
