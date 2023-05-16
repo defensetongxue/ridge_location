@@ -78,9 +78,9 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     train_annotations = []
     val_annotations = []
     test_annotations =[]
-    train_condition={'1':0,"2":0}
-    val_condition={'1':0,"2":0}
-    test_condition={'1':0,"2":0}
+    train_condition={'1':0,"2":0,"3":0}
+    val_condition={'1':0,"2":0,"3":0}
+    test_condition={'1':0,"2":0,"3":0}
     for data in annotations:
         if data['image_name'] in train_list:
             train_annotations.append(data)
