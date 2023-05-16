@@ -51,10 +51,16 @@ def parse_json_file(file_dict):
         if not file.split('.')[-1]=='json':
             print(f"unexpected file {file} in json_src")
             continue
+        if not file.split('.')[-1]=='json':
+            print(f"unexpected file {file} in json_src")
+            continue
         with open(os.path.join(file_dict,file), 'r') as f:
             data = json.load(f)
         
         for json_obj in data:
+            new_data=parse_json(json_obj,label_class=int(file[0]))
+            if new_data["ridge_number"]>0:        
+                annotation.append(new_data)
             new_data=parse_json(json_obj,label_class=int(file[0]))
             if new_data["ridge_number"]>0:        
                 annotation.append(new_data)
@@ -100,15 +106,16 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     with open(os.path.join(data_path, 'ridge', 'test.json'), 'w') as f:
         json.dump(test_annotations, f, indent=2)
 
-    print(f"Total samples: {len(annotations)}" )
-    print(f"Train samples: {len(train_annotations)} {train_condition}")
-    print(f"Validation samples: {len(val_annotations)} {val_condition}")
-    print(f"Test samples: {len(test_annotations)} {test_condition}")
-    print()
+    print(f"Total samples: {len(annotations)}"  )
+    print(f"Train samples: {len(train_annotations)} {train_condition} {train_condition}")
+    print(f"Validation samples: {len(val_annotations)} {val_condition} {val_condition}")
+    print(f"Test samples: {len(test_annotations)} {test_condition} {test_condition}")
+    print()    print()
 if __name__=='__main__':
     from config import get_config
     args=get_config()
     
     # cleansing
     annotations=parse_json_file(args.json_file_dict)
+    split_data(args.path_tar,annotations,0.8,0.13)
     split_data(args.path_tar,annotations,0.8,0.13)
