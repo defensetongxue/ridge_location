@@ -110,7 +110,6 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     print(f"Train samples: {len(train_annotations)} {train_condition} {train_condition}")
     print(f"Validation samples: {len(val_annotations)} {val_condition} {val_condition}")
     print(f"Test samples: {len(test_annotations)} {test_condition} {test_condition}")
-    print()    print()
 if __name__=='__main__':
     from config import get_config
     args=get_config()
