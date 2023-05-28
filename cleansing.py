@@ -61,13 +61,10 @@ def parse_json_file(file_dict):
             new_data=parse_json(json_obj,label_class=int(file[0]))
             if new_data["ridge_number"]>0:        
                 annotation.append(new_data)
-            new_data=parse_json(json_obj,label_class=int(file[0]))
-            if new_data["ridge_number"]>0:        
-                annotation.append(new_data)
 
     return annotation
 
-def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15):
+def split_data(data_path, annotations):
     # Important: do not shuffle, as there may be some images very similar be split into different set
     os.makedirs(os.path.join(data_path, 'ridge'),exist_ok=True)
     os.system(f"rm -rf {os.path.join(data_path, 'ridge')}/*")
@@ -81,6 +78,7 @@ def split_data(data_path, annotations, train_proportion=0.7, val_proportion=0.15
     with open(os.path.join(data_path, 'annotations', "test.json"), 'r') as f:
         test_list=json.load(f)
         test_list=[i['image_name'] for i in test_list]
+
     train_annotations = []
     val_annotations = []
     test_annotations =[]
@@ -116,5 +114,4 @@ if __name__=='__main__':
     
     # cleansing
     annotations=parse_json_file(args.json_file_dict)
-    split_data(args.path_tar,annotations,0.8,0.13)
-    split_data(args.path_tar,annotations,0.8,0.13)
+    split_data(args.path_tar,annotations)
