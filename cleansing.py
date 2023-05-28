@@ -2,13 +2,14 @@ import json
 import os
 import random
 
-def parse_json(input_data,label_class=0):
+def parse_json(input_data,label_class=0,image_dict="../autodl-tmp/images"):
     annotations = input_data.get("annotations", [])
     if annotations:
         result = annotations[0].get("result", [])
-
+    image_name=input_data["file_upload"].split('-')[-1]
     new_data = {
-        "image_name": input_data["file_upload"].split('-')[-1],
+        "image_name": image_name,
+        "image_path":os.path.join(image_dict,image_name),
         "ridge_number": 0,
         "ridge_coordinate": [],
         "other_number": 0,
@@ -42,7 +43,7 @@ def parse_json(input_data,label_class=0):
 
     return new_data
 
-def parse_json_file(file_dict):
+def parse_json_file(file_dict,data_path):
     
     annotation=[]
     file_list=sorted(os.listdir(file_dict))
@@ -58,7 +59,8 @@ def parse_json_file(file_dict):
             data = json.load(f)
         
         for json_obj in data:
-            new_data=parse_json(json_obj,label_class=int(file[0]))
+            new_data=parse_json(json_obj,label_class=int(file[0]),
+                                image_dict=os.path.join(data_path,'images'))
             if new_data["ridge_number"]>0:        
                 annotation.append(new_data)
 
@@ -113,5 +115,5 @@ if __name__=='__main__':
     args=get_config()
     
     # cleansing
-    annotations=parse_json_file(args.json_file_dict)
+    annotations=parse_json_file(args.json_file_dict,args.path_tar)
     split_data(args.path_tar,annotations)
