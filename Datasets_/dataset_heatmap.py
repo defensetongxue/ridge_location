@@ -27,9 +27,7 @@ class KeypointDetectionDatasetHeatmap(Dataset):
         ul = [int(pt[0] - tmp_size), int(pt[1] - tmp_size)]
         br = [int(pt[0] + tmp_size + 1), int(pt[1] + tmp_size + 1)]
         if (ul[0] >= img.shape[1] or ul[1] >= img.shape[0] or br[0] < 0 or br[1] < 0):
-            print(pt, img_path)
-            raise
-            return img
+            raise ValueError(f"Invalid boundary point {pt} in image {img_path}")
 
         size = 2 * tmp_size + 1
         x = np.arange(0, size, 1, np.float32)
@@ -41,12 +39,14 @@ class KeypointDetectionDatasetHeatmap(Dataset):
         else:
             g = sigma / (((x - x0) ** 2 + (y - y0) ** 2 + sigma ** 2) ** 1.5)
 
-        g_x = max(0, -ul[0]), min(br[0], img.shape[1]) - ul[0]
-        g_y = max(0, -ul[1]), min(br[1], img.shape[0]) - ul[1]
-        img_x = max(0, ul[0]), min(br[0], img.shape[1])
-        img_y = max(0, ul[1]), min(br[1], img.shape[0])
+        g_x = 0, br[0] - ul[0]
+        g_y = 0, br[1] - ul[1]
+        img_x = ul[0], br[0]
+        img_y = ul[1], br[1]
 
-        img[img_y[0]:img_y[1], img_x[0]:img_x[1]] = g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
+        img[img_y[0]:img_y[1], img_x[0]:img_x[1]] = np.maximum(
+            img[img_y[0]:img_y[1], img_x[0]:img_x[1]],
+            g[g_y[0]:g_y[1], g_x[0]:g_x[1]])
         return img
 
     def __getitem__(self, idx):
