@@ -5,7 +5,7 @@ from PIL import Image
 import json
 from .transforms_kit import *
 class KeypointDetectionDatasetHeatmap(Dataset):
-    def __init__(self, data_path, split='train', heatmap_rate=0.25, sigma=1.5,resize=[800,800]):
+    def __init__(self, data_path, split='train', heatmap_rate=0.25, sigma=1.5,resize=[600,800]):
         self.data_path = data_path
         self.heatmap_rate = heatmap_rate
         self.sigma = sigma

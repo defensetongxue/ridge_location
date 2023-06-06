@@ -1,2 +1,3 @@
 from .function_ import train_epoch,val_epoch,get_optimizer,get_instance,ridge2json
 from .visual_functional import decode_preds,visualize_and_save_landmarks
+from .ridge_diffusion import generate_diffusion_heatmap

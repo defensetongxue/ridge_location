@@ -1,6 +1,8 @@
 import json
 import os
-import random
+from utils_ import generate_diffusion_heatmap
+import numpy as np
+from PIL import Image
 
 def parse_json(input_data,label_class=0,image_dict="../autodl-tmp/images"):
     annotations = input_data.get("annotations", [])
@@ -110,10 +112,23 @@ def split_data(data_path, annotations):
     print(f"Train samples: {len(train_annotations)} {train_condition} {train_condition}")
     print(f"Validation samples: {len(val_annotations)} {val_condition} {val_condition}")
     print(f"Test samples: {len(test_annotations)} {test_condition} {test_condition}")
+
+def generate_ridge_heatmap(data_path):
+    os.makedirs(os.path.join(data_path,'ridge_heatmap'),exist_ok=True)
+    splits=['train','val','test']
+    for split in splits:
+        with open(os.path.join(data_path, 'ridge', f'{split}.json'), 'r') as f:
+            ridge_annotations=json.load(f)
+        for data in ridge_annotations:
+            mask = generate_diffusion_heatmap(data['image_path'],data['ridge_coordinate'], factor=0.5, Gauss=False)
+            mask_path = os.path.join(data_path, 'ridge_heatmap', f"{data['image_name'].split('.')[0]}.png")
+            Image.fromarray((mask * 255).astype(np.uint8)).save(mask_path)
+    return 
 if __name__=='__main__':
     from config import get_config
     args=get_config()
     
     # cleansing
-    annotations=parse_json_file(args.json_file_dict,args.path_tar)
-    split_data(args.path_tar,annotations)
+    # annotations=parse_json_file(args.json_file_dict,args.path_tar)
+    # split_data(args.path_tar,annotations)
+    generate_ridge_heatmap(args.path_tar)
